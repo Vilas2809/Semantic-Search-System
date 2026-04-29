@@ -1,0 +1,23 @@
+Python Best Practices
+
+Python is a high-level, interpreted programming language known for its clear syntax and readability. Here are key best practices for writing great Python code.
+
+Use virtual environments to isolate project dependencies. Tools like venv, conda, or poetry help manage dependencies per project and prevent conflicts between packages.
+
+Follow PEP 8 style guidelines for consistent, readable code. This includes using 4 spaces for indentation, limiting lines to 79 characters, and using descriptive variable names.
+
+Use type hints to make code more maintainable and catch bugs early. Python 3.5+ supports type annotations, and tools like mypy can statically verify types.
+
+Write docstrings for all public modules, functions, classes, and methods. Docstrings serve as inline documentation and can be accessed programmatically.
+
+Prefer list comprehensions over traditional loops for simple transformations. They are more Pythonic and often faster. For example: [x*2 for x in range(10)].
+
+Use context managers (with statements) for resource management. They ensure proper cleanup of resources like files, database connections, and network sockets.
+
+Leverage Python's standard library before reaching for third-party packages. Modules like pathlib, itertools, functools, and collections solve many common problems elegantly.
+
+Write tests using pytest. Aim for high test coverage, especially for critical business logic. Use fixtures for reusable test setup and parametrize for testing multiple inputs.
+
+Use dataclasses or Pydantic models instead of raw dictionaries when working with structured data. They provide type safety, validation, and better IDE support.
+
+Profile before optimizing. Use cProfile or line_profiler to identify actual bottlenecks rather than guessing. Premature optimization leads to complex, hard-to-maintain code.

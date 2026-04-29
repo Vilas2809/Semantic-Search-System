@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSS — Semantic Search System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient background orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <polygon points="14,2 26,9 26,19 14,26 2,19 2,9" fill="none" stroke="url(#lg)" stroke-width="1.5"/>
+          <polygon points="14,7 21,11 21,17 14,21 7,17 7,11" fill="url(#lg)" opacity="0.2"/>
+          <circle cx="14" cy="14" r="3" fill="url(#lg)"/>
+          <defs>
+            <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#a78bfa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="logo-text-wrap">
+        <span class="logo-text">SSS</span>
+        <span class="logo-sub">Semantic Search</span>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav-btn active" data-tab="search">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </span>
+        Search
+      </button>
+      <button class="nav-btn" data-tab="ask">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        Ask
+      </button>
+      <button class="nav-btn" data-tab="index">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+        </span>
+        Index
+      </button>
+      <button class="nav-btn" data-tab="stats">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </span>
+        Stats
+      </button>
+    </nav>
+
+    <div class="sidebar-sep"></div>
+
+    <button id="devmode-toggle" class="devmode-btn">
+      <span class="nav-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </span>
+      Dev Mode
+      <span id="devmode-pill" class="pill pill-off">OFF</span>
+    </button>
+
+    <div class="sidebar-footer">
+      <span id="status-dot" class="dot dot-checking"></span>
+      <span id="status-label">Connecting…</span>
+      <span class="version-tag">v2.0</span>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="content">
+
+    <!-- SEARCH TAB -->
+    <section id="tab-search" class="tab active">
+      <div class="page-header">
+        <div>
+          <h1>Hybrid Search</h1>
+          <p class="subtitle">BM25 keyword + semantic vector retrieval, re-ranked by a cross-encoder.</p>
+        </div>
+      </div>
+
+      <!-- Pipeline diagram -->
+      <div class="pipeline" id="pipeline">
+        <div class="pipe-node pipe-query">
+          <span class="pipe-node-icon">⌕</span>
+          <span>Query</span>
+        </div>
+        <div class="pipe-fork">
+          <div class="pipe-fork-line top"></div>
+          <div class="pipe-fork-line bottom"></div>
+        </div>
+        <div class="pipe-dual">
+          <div class="pipe-node pipe-bm25">
+            <span class="pipe-chip">BM25</span>
+            <span class="pipe-node-sub">keyword</span>
+          </div>
+          <div class="pipe-node pipe-vec">
+            <span class="pipe-chip">Vector</span>
+            <span class="pipe-node-sub">semantic</span>
+          </div>
+        </div>
+        <div class="pipe-join">
+          <div class="pipe-join-line top"></div>
+          <div class="pipe-join-line bottom"></div>
+        </div>
+        <div class="pipe-node pipe-rrf">
+          <span class="pipe-chip">RRF</span>
+          <span class="pipe-node-sub">fusion</span>
+        </div>
+        <div class="pipe-arrow-line"><div class="pipe-arrowhead"></div></div>
+        <div class="pipe-node pipe-rerank">
+          <span class="pipe-chip pipe-chip-accent">Reranker</span>
+          <span class="pipe-node-sub">cross-encoder</span>
+        </div>
+        <div class="pipe-arrow-line"><div class="pipe-arrowhead"></div></div>
+        <div class="pipe-node pipe-result">
+          <span class="pipe-node-icon">◉</span>
+          <span>Results</span>
+        </div>
+      </div>
+
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="search-input" type="text" placeholder="Search your documents…" autocomplete="off" />
+          <select id="search-topk" class="inline-select">
+            <option value="3">Top 3</option>
+            <option value="5" selected>Top 5</option>
+            <option value="10">Top 10</option>
+          </select>
+          <button id="search-btn" class="btn-primary">Search</button>
+        </div>
+        <div class="search-hint">Press <kbd>Enter</kbd> to search</div>
+      </div>
+
+      <div id="search-latency" class="latency-bar" style="display:none"></div>
+      <div id="search-results"></div>
+    </section>
+
+    <!-- ASK TAB -->
+    <section id="tab-ask" class="tab">
+      <div class="page-header">
+        <div>
+          <h1>Ask</h1>
+          <p class="subtitle">Retrieves context via hybrid search, then <span class="tag-groq">Groq</span> generates a grounded answer.</p>
+        </div>
+      </div>
+
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <input id="ask-input" type="text" placeholder="Ask a question about your documents…" autocomplete="off" />
+          <select id="ask-topk" class="inline-select">
+            <option value="3">Top 3</option>
+            <option value="5" selected>Top 5</option>
+            <option value="10">Top 10</option>
+          </select>
+          <button id="ask-btn" class="btn-primary">Ask</button>
+        </div>
+        <div class="search-hint">Press <kbd>Enter</kbd> to ask</div>
+      </div>
+
+      <div id="ask-latency" class="latency-bar" style="display:none"></div>
+      <div id="ask-result"></div>
+    </section>
+
+    <!-- INDEX TAB -->
+    <section id="tab-index" class="tab">
+      <div class="page-header">
+        <div>
+          <h1>Index Documents</h1>
+          <p class="subtitle">Content is written to both BM25 and the vector store simultaneously.</p>
+        </div>
+      </div>
+
+      <div class="index-grid">
+        <div class="card">
+          <div class="card-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <h2>Upload File</h2>
+            <span class="card-badge">.txt .pdf .docx</span>
+          </div>
+          <div class="file-drop" id="file-drop">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p>Drop a file here</p>
+            <label class="btn-outline">
+              Browse Files
+              <input type="file" id="file-input" accept=".txt,.pdf,.docx" hidden />
+            </label>
+          </div>
+          <div id="file-name" class="file-name"></div>
+          <button id="upload-btn" class="btn-primary full-w" disabled>Index File</button>
+          <div id="upload-result"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <h2>Paste Text</h2>
+          </div>
+          <input id="text-id" type="text" placeholder="Document ID (e.g. my-notes)" class="full-input" />
+          <textarea id="text-input" rows="7" placeholder="Paste your content here…"></textarea>
+          <button id="text-btn" class="btn-primary full-w">Index Text</button>
+          <div id="text-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS TAB -->
+    <section id="tab-stats" class="tab">
+      <div class="page-header">
+        <div>
+          <h1>Index Stats</h1>
+          <p class="subtitle">Live overview of what's in the vector store.</p>
+        </div>
+        <button id="refresh-stats" class="btn-outline-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Refresh
+        </button>
+      </div>
+      <div id="stats-result"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

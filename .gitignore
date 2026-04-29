@@ -1,0 +1,11 @@
+# Python
+.env
+__pycache__/
+*.pyc
+*.pkl
+
+# Vector DB
+chroma_db/
+
+# OS / editor
+.DS_Store

@@ -16,10 +16,11 @@ The stack: BM25 (`rank-bm25`) for keyword search, `all-MiniLM-L6-v2` for embeddi
 
 **Install dependencies**
 ```bash
+cd backend
 pip3 install -r requirements.txt
 ```
 
-**Add your Groq API key to `.env`**
+**Add your Groq API key to `backend/.env`**
 ```bash
 GROQ_API_KEY=your_key_here
 ```
@@ -29,6 +30,12 @@ Free key at [console.groq.com](https://console.groq.com) — takes about a minut
 ---
 
 ## CLI
+
+Run all CLI commands from the `backend/` folder:
+
+```bash
+cd backend
+```
 
 ### Indexing documents
 ```bash
@@ -69,7 +76,10 @@ There's a browser frontend in `frontend/` if you prefer clicking over typing.
 
 Start the backend first:
 ```bash
+cd backend
 python3 api.py
+# → http://localhost:8000
+# → http://localhost:8000/docs  (Swagger UI)
 ```
 
 Then open the frontend in your browser:
@@ -86,12 +96,6 @@ There's a **Developer Mode** toggle in the sidebar that shows per-query latency 
 ---
 
 ## REST API
-
-```bash
-python3 api.py
-# → http://localhost:8000
-# → http://localhost:8000/docs  (Swagger UI)
-```
 
 | Method | Path | |
 |---|---|---|
@@ -130,26 +134,28 @@ curl -X POST http://localhost:8000/index/file \
 
 ```
 Semantic Search System/
-├── src/
-│   ├── document_loader.py   # loads .txt / .pdf / .docx, chunks with overlap
-│   ├── embeddings.py        # sentence-transformers wrapper
-│   ├── vector_store.py      # ChromaDB reads/writes
-│   ├── search_engine.py     # orchestrates indexing and search
-│   ├── llm_client.py        # Groq API calls (answers + reranking)
-│   └── rag_pipeline.py      # ties it all together
-├── data/
-│   └── sample_docs/         # a few sample docs to try it out
+├── backend/
+│   ├── src/
+│   │   ├── document_loader.py   # loads .txt / .pdf / .docx, chunks with overlap
+│   │   ├── embeddings.py        # sentence-transformers wrapper
+│   │   ├── vector_store.py      # ChromaDB reads/writes
+│   │   ├── search_engine.py     # orchestrates indexing and search
+│   │   ├── llm_client.py        # Groq API calls (answers + reranking)
+│   │   └── rag_pipeline.py      # ties it all together
+│   ├── data/
+│   │   └── sample_docs/         # a few sample docs to try it out
+│   ├── tests/
+│   │   └── test_pipeline.py
+│   ├── config.py                # reads settings from .env
+│   ├── main.py                  # CLI
+│   ├── api.py                   # FastAPI server
+│   └── requirements.txt
 ├── frontend/
 │   ├── index.html
 │   ├── style.css
 │   └── app.js
-├── tests/
-│   └── test_pipeline.py
-├── config.py                # reads settings from .env
-├── main.py                  # CLI
-├── api.py                   # FastAPI server
-├── requirements.txt
-└── .env.example
+├── .gitignore
+└── README.md
 ```
 
 ---
@@ -174,13 +180,13 @@ Knobs you can tune in `.env`:
 
 ## Temperature
 
-For answer generation (`ask`) I use `0.2` — grounded in the retrieved context but not completely robotic. For LLM reranking (`--rerank`) it's `0.0` since that needs to be deterministic. Both are in [src/llm_client.py](src/llm_client.py).
+For answer generation (`ask`) I use `0.2` — grounded in the retrieved context but not completely robotic. For LLM reranking (`--rerank`) it's `0.0` since that needs to be deterministic. Both are in [backend/src/llm_client.py](backend/src/llm_client.py).
 
 ---
 
 ## Configuration
 
-All settings go in `.env`:
+All settings go in `backend/.env`:
 
 | Variable | Default | |
 |---|---|---|
@@ -197,6 +203,7 @@ All settings go in `.env`:
 ## Tests
 
 ```bash
+cd backend
 pytest tests/ -v
 ```
 

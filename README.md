@@ -74,20 +74,15 @@ python3 main.py delete ai_overview  # remove a document by ID
 
 There's a browser frontend in `frontend/` if you prefer clicking over typing.
 
-Start the backend first:
+Start the backend:
 ```bash
 cd backend
 python3 api.py
-# → http://localhost:8000
-# → http://localhost:8000/docs  (Swagger UI)
+# → http://localhost:8000        (frontend)
+# → http://localhost:8000/docs   (Swagger UI)
 ```
 
-Then open the frontend in your browser:
-```bash
-open frontend/index.html
-# → file:///Users/vilas/Desktop/projects/Semantic%20Search%20System/frontend/index.html
-```
-No build step, no server needed for the frontend.
+The frontend is served directly by the backend — just open `http://localhost:8000` in your browser once the server is running. No separate step needed.
 
 The UI has four tabs: **Search** for hybrid search with match % badges and source attribution, **Ask** for getting an LLM-generated answer with cited sources, **Index** for dragging in a file or pasting text, and **Stats** for seeing what's indexed and deleting documents.
 

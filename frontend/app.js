@@ -271,6 +271,46 @@ async function runAsk() {
   }
 }
 
+// ── CHAT ──────────────────────────────────────────────────
+document.getElementById('chat-btn').addEventListener('click', runChat);
+document.getElementById('chat-input').addEventListener('keydown', e => { if (e.key === 'Enter') runChat(); });
+
+async function runChat() {
+  const message = document.getElementById('chat-input').value.trim();
+  const out     = document.getElementById('chat-result');
+  if (!message) return;
+
+  out.innerHTML = `<div class="msg msg-loading"><span class="loader"></span>Waiting for Groq…</div>`;
+
+  try {
+    const res  = await fetch(`${API}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      out.innerHTML = `<div class="msg msg-error">${esc(data.detail || 'Something went wrong on the server.')}</div>`;
+      return;
+    }
+
+    out.innerHTML = `
+      <div class="answer-wrapper">
+        <div class="answer-header">
+          <span class="answer-header-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Reply
+          </span>
+          <span class="answer-model">${esc(data.model)}</span>
+        </div>
+        <div class="answer-body">${esc(data.reply)}</div>
+      </div>`;
+  } catch {
+    out.innerHTML = `<div class="msg msg-error">Could not reach the API — is the backend running?</div>`;
+  }
+}
+
 // ── INDEX — file ──────────────────────────────────────────
 const fileInput = document.getElementById('file-input');
 const fileDrop  = document.getElementById('file-drop');

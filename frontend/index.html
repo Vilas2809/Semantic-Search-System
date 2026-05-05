@@ -50,6 +50,12 @@
         </span>
         Ask
       </button>
+      <button class="nav-btn" data-tab="chat">
+        <span class="nav-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </span>
+        Chat
+      </button>
       <button class="nav-btn" data-tab="index">
         <span class="nav-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -176,6 +182,27 @@
 
       <div id="ask-latency" class="latency-bar" style="display:none"></div>
       <div id="ask-result"></div>
+    </section>
+
+    <!-- CHAT TAB -->
+    <section id="tab-chat" class="tab">
+      <div class="page-header">
+        <div>
+          <h1>Chat</h1>
+          <p class="subtitle">Talk directly to <span class="tag-groq">Groq</span> — no document retrieval, just the LLM.</p>
+        </div>
+      </div>
+
+      <div class="search-bar-wrap">
+        <div class="search-bar">
+          <svg class="search-bar-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <input id="chat-input" type="text" placeholder="Ask anything…" autocomplete="off" />
+          <button id="chat-btn" class="btn-primary">Send</button>
+        </div>
+        <div class="search-hint">Press <kbd>Enter</kbd> to send</div>
+      </div>
+
+      <div id="chat-result"></div>
     </section>
 
     <!-- INDEX TAB -->

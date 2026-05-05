@@ -98,6 +98,20 @@ def ask(
 
 
 @app.command()
+def chat(
+    message: str = typer.Argument(..., help="Message to send directly to Groq"),
+):
+    """Chat directly with Groq — no document retrieval, just the LLM."""
+    from src.llm_client import LLMClient
+
+    llm = LLMClient()
+    with console.status("[bold green]Thinking...[/bold green]"):
+        reply = llm.chat(message)
+
+    console.print(Panel(Markdown(reply), title="Groq", border_style="magenta"))
+
+
+@app.command()
 def stats():
     """Show index statistics."""
     engine = _get_engine()

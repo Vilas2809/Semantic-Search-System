@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import tempfile
 import shutil
@@ -20,6 +21,7 @@ app.add_middleware(
 
 _engine = None
 _pipeline = None
+_llm = None
 
 
 def get_engine():
@@ -38,7 +40,26 @@ def get_pipeline():
     return _pipeline
 
 
+def get_llm():
+    global _llm
+    if _llm is None:
+        from src.llm_client import LLMClient
+        _llm = LLMClient()
+    return _llm
+
+
 # ── Request models ───────────────────────────────────────────
+
+class ChatRequest(BaseModel):
+    message: str
+    system_prompt: str | None = None
+
+
+class ChatResponse(BaseModel):
+    message: str
+    reply: str
+    model: str
+
 
 class IndexTextRequest(BaseModel):
     text: str
@@ -129,6 +150,13 @@ def health():
     return {"status": "ok"}
 
 
+@app.post("/chat", response_model=ChatResponse)
+def chat(req: ChatRequest):
+    llm = get_llm()
+    reply = llm.chat(req.message, req.system_prompt)
+    return ChatResponse(message=req.message, reply=reply, model=llm.model)
+
+
 @app.get("/stats", response_model=StatsResponse)
 def stats():
     s = get_engine().stats()
@@ -182,6 +210,10 @@ def delete_document(doc_id: str):
     get_engine().delete_document(doc_id)
     return {"deleted": doc_id}
 
+
+frontend_dir = Path(__file__).parent.parent / "frontend"
+if frontend_dir.exists():
+    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

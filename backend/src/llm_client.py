@@ -39,6 +39,20 @@ class LLMClient:
         )
         return response.choices[0].message.content
 
+    def chat(self, message: str, system_prompt: str = None) -> str:
+        """Send a message directly to Groq without any document context."""
+        system = system_prompt or "You are a helpful assistant. Answer the user's question clearly and concisely."
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": message},
+            ],
+            temperature=0.7,
+            max_tokens=1024,
+        )
+        return response.choices[0].message.content
+
     def rerank_with_llm(self, query: str, chunks: list[str], top_k: int = 3) -> list[int]:
         """Ask the LLM to pick the most relevant chunk indices (0-based)."""
         numbered = "\n\n".join(f"[{i}] {chunk}" for i, chunk in enumerate(chunks))
